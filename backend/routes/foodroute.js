@@ -19,4 +19,5 @@ foodRouter.post("/add", upload.single("image"), addFoods);
 foodRouter.get("/list",listfood)
 foodRouter.post("/remove",removefood)
 
+
 export default foodRouter;
