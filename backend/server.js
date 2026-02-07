@@ -19,4 +19,5 @@ app.get("/", (req, res) => {
 // 7. Start Server
 app.listen(port, () => {
     console.log(`Server Started on http://localhost:${port}`);
+
 });
