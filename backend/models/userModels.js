@@ -1,18 +1,50 @@
-import mongoose from "mongoose";  
+import mongoose from "mongoose";
 
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  cartData: { type: Object, default: {} },
-  // Added fields for password recovery
-  resetPasswordToken: { type: String },
-  resetPasswordExpire: { type: Date }
-}, { 
-  minimize: false, 
-  timestamps: true // Good practice to track when users are created/updated
-});
+class UserModel {
+  constructor() {
+    this.schema = new mongoose.Schema({
+      name: { type: String, required: true },
+      email: { type: String, required: true, unique: true },
+      password: { type: String, required: true },
+      cartData: { type: Object, default: {} },
+      resetPasswordToken: { type: String },
+      resetPasswordExpire: { type: Date }
+    }, { 
+      minimize: false, 
+      timestamps: true
+    });
 
-const userModel = mongoose.models.user || mongoose.model("user", userSchema);
+    this.model = mongoose.models.user || mongoose.model("user", this.schema);
+  }
 
-export default userModel;
+  async create(userData) {
+    const user = new this.model(userData);
+    return await user.save();
+  }
+
+  async findById(id) {
+    return await this.model.findById(id);
+  }
+
+  async findByEmail(email) {
+    return await this.model.findOne({ email });
+  }
+
+  async updateById(id, updateData) {
+    return await this.model.findByIdAndUpdate(id, updateData, { new: true });
+  }
+
+  async deleteById(id) {
+    return await this.model.findByIdAndDelete(id);
+  }
+
+  async findAll() {
+    return await this.model.find({});
+  }
+
+  getModel() {
+    return this.model;
+  }
+}
+
+export default new UserModel();
